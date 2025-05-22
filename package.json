@@ -1,0 +1,27 @@
+{
+  "name": "jmdict-simple",
+  "version": "1.0.0",
+  "description": "A conversion script for creating a reduced version of the JMdict - Japanese-Multilingual Dictionary, optimized for querying in Hiragana.",
+  "scripts": {
+    "build": "node ./src/build.js",
+    "convert": "node ./src/convert.js",
+    "update": "node ./src/update.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigswtool/jmdict-simple.git"
+  },
+  "keywords": [
+    "jmdict",
+    "simple",
+    "hiragana"
+  ],
+  "author": "SIGMATEK GmbH & Co KG",
+  "bugs": {
+    "url": "https://github.com/sigswtool/jmdict-simple/issues"
+  },
+  "homepage": "https://github.com/sigswtool/jmdict-simple#readme",
+  "devDependencies": {
+    "tar": "^7.4.3"
+  }
+}
