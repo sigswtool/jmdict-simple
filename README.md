@@ -5,6 +5,8 @@ It uses the JSON dictionary provided by the [jmdict-simplified](https://github.c
 
 The original dictionary is created and maintained by the [ELECTRONIC DICTIONARY RESEARCH AND DEVELOPMENT GROUP](https://www.edrdg.org/jmdict/j_jmdict.html).
 
+The conversion script itself is developed and maintained by [SIGMATEK GmbH & Co KG](https://www.sigmatek-automation.com/).
+
 ## Install the dependencies
 Checkout the repository and run the following command:
 
@@ -23,7 +25,7 @@ The following files will be created in the ``release``  folder:
 * simple.min.json.gz
 
 ### Build the latest version
-If you want to build the simple version based on thr latest JMdict dictionary version run the following command:
+If you want to build the simple version based on the latest JMdict dictionary version run the following command:
 
 ```bash
 npm run build
@@ -37,7 +39,7 @@ npm run build 3.5.0+20240902122037
 ```
 
 ### Manually update the source dictionary
-To manually update the source JMdict dictionary  to the latest release run:
+To manually update the source JMdict dictionary to the latest release run:
 
 ```bash
 npm run update

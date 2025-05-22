@@ -40,7 +40,7 @@ async function update(tag = _tag) {
     console.log(`Updating source dictionary to release tag "${tag}"`);
     const asset = await getAsset(owner, repo, prefix, extension, tag);
     if (asset === null) {
-        console.error(`Could not find any assest starting with "${prefix}" and ending with "${extension}" for tag "${tag}"`);
+        console.error(`Could not find any assets starting with "${prefix}" and ending with "${extension}" for tag "${tag}"`);
         return null;
     }
     const url = asset.browser_download_url;
