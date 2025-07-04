@@ -38,6 +38,8 @@ If you want to build the simple version based on a specific JMdict dictionary ve
 npm run build 3.5.0+20240902122037
 ```
 
+> It is possible to [apply a patch](#apply-a-patch-during-build-time) during build time.
+
 ### Manually update the source dictionary
 To manually update the source JMdict dictionary to the latest release run:
 
@@ -55,6 +57,84 @@ If you already have a JMdict source dictionary in the ``data`` folder you can co
 
 ```bash
 npm run convert jmdict-all-3.5.0.json
+```
+## Patch management
+If you have built your own modified version of the JMdict Simple dictionary you can create a patch file and integrate it in the build. 
+
+### Creating a patch
+
+* Make sure the original version (simple.min.json) of the JMdict Simple dictionary is present in the ``release`` folder.
+* Place your modified JMdict Simple dictionary (like simple.min_modified.json) in the ``data`` folder.
+* Run the following command to create a patch:
+
+```bash
+npm run patch create simple.min.json simple.min_modified.json
+```
+This creates the patch file `simple.min.patch.json` in the `patches` folder.
+
+If you want to specify your own patch filename you can supply the filename (without extension) as the third parameter:
+
+```bash
+npm run patch create simple.min.json simple.min_modified.json my_own_name
+```
+This creates the patch file `my_own_name.patch.json` in the `patches` folder.
+
+### Apply a patch during build time
+To apply a patch during build time follow these steps:
+
+* The patch file must reside within the `patches` folder.
+* It is mandatory to add the [version number](#build-a-specific-version) of the source directory to the build command.
+* Supply the patch name as the second parameter of the build command.
+
+```bash
+npm run build latest simple.min.patch.json 
+```
+This applies the patch directly to the created `simple.min.json` in the `release` folder.
+
+> If the version number of the patch file and the converted version of the source dictionary do not match the build will fail.
+
+### Applying a patch to an existing dictionary
+To apply a patch to an already converted dictionary follow these steps:
+
+* Make sure the original JMdict Simple dictionary is present in the `release` folder.
+* Make sure the patch file is present in the `patches` folder.
+* Run the following command to apply the patch:
+
+```bash
+ npm run patch apply simple.min.json simple.min.patch.json
+```
+This integrates the patch directly into `simple.min.json` in the `release` folder.
+
+If you want to save the new patched version to another file you can supply the filename (including the extension) as the third parameter:
+
+```bash
+npm run patch create simple.min.json simple.min_modified.json my_own_name.json
+```
+This creates the patched file `my_own_name.json` in the `release` folder.
+
+>If the version number of the patch file and the converted version of the source dictionary do not match the operation will fail.
+
+### Verifying a patched version
+After you created a patch file you can (and should) validate if the created patch can be applied correctly.
+
+* Make sure the modified version from which the patch was created from is still available in the `data` folder.
+* Create a [new build](#apply-a-patch-during-build-time) of the JMdict Simple dictionary with the created patch or [apply](#applying-a-patch-to-an-existing-dictionary) it to an existing one. 
+* Run one of the following commands to verify if the patch was correctly applied.
+
+#### Standard verify (fast) 
+The patched and the modified version are verified by comparing all object keys and their values.
+This is very fast, but does not check if the order of the object keys is identical.
+
+```bash
+npm run patch verify simple.min.json simple.min_modified.json
+```
+
+#### Deep verify (slow)
+The patched and the modified version are verified by comparing each individual character of each line. 
+This is a much slower the the standard verification, but this detects deviations in the order or any other non printable characters (like line endings etc).
+
+```bash
+npm run patch verifyDeep simple.min.json simple.min_modified.json
 ```
 
 ## License

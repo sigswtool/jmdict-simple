@@ -1,11 +1,12 @@
 {
   "name": "jmdict-simple",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A conversion script for creating a reduced version of the JMdict - Japanese-Multilingual Dictionary, optimized for querying in Hiragana.",
   "scripts": {
     "build": "node ./src/build.js",
     "convert": "node ./src/convert.js",
-    "update": "node ./src/update.js"
+    "update": "node ./src/update.js",
+    "patch": "node ./src/patch.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
   },
   "homepage": "https://github.com/sigswtool/jmdict-simple#readme",
   "devDependencies": {
+    "clone-deep": "^4.0.1",
+    "fast-json-patch": "^3.1.1",
     "tar": "^7.4.3"
   }
 }

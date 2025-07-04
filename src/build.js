@@ -2,8 +2,9 @@ const { update } = require('./update.js');
 const { convert } = require('./convert.js');
 const package = require('../package.json');
 
-// Get the tag name  from the command line (index 2).
+// Get the tag name  from the command line (index 2 & 3).
 const _tagArg = process.argv[2];
+const _patchArg = process.argv[3];
 
 /**
  * Updates the source dictionary and builds the release.
@@ -16,7 +17,7 @@ async function main() {
     let success;
     const filename = await update(_tagArg);
     if (filename === null) success = false;
-    else success = await convert(filename);
+    else success = await convert(filename, _patchArg);
     console.log(`The build of "${package.name}" ${success ? 'was successful' : 'failed'}.`);
 }
 

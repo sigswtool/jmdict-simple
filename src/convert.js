@@ -2,9 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const package = require('../package.json');
+const patch = require('./patch.js');
 
-// Get the data from the command line (index 2)
+// Get the data from the command line (index 2 & 3)
 const fileNameArg = process.argv[2];
+const patchNameArg = process.argv[3];
 
 const dataFolder = '../data';
 const releaseFolder = '../release';
@@ -19,15 +21,16 @@ function main() {
     console.log(`Converting source dictionary to "${package.name}"`);
     console.log(`Version: ${package.version}`);
     console.log('*******************************************************************************');
-    convert(fileNameArg);
+    convert(fileNameArg, patchNameArg);
 }
 
 /**
  * Converts the original JMdict JSON file from the `data` folder to a simplified format.
  * @param {string} fileName The file name of the JSON file.
+ * @param {string} patchName The file name of the JSON patch file.
  * @return {Promise<boolean>} Returns a promise wich resolves true if the conversion was successful, otherwise false.
  */
-function convert(fileName) {
+function convert(fileName, patchName) {
     return new Promise((resolve, reject) => {
         try {
             if (typeof fileName !== 'string' || fileName.length === 0) {
@@ -46,7 +49,7 @@ function convert(fileName) {
                 console.error('The releaser folder does not exists.');
                 return resolve(false);
             }
-            fs.readFile(inputFilePath, 'utf8', (error, data) => {
+            fs.readFile(inputFilePath, 'utf8', async (error, data) => {
                 if (error) {
                     console.error('Error reading the input file:', error);
                     return resolve(false);
@@ -80,7 +83,7 @@ function convert(fileName) {
                     });
                 });
                 // Set version & date
-                const finalOutput = {
+                let finalOutput = {
                     version: jmdictData.version,
                     dictDate: jmdictData.dictDate,
                 }
@@ -94,6 +97,14 @@ function convert(fileName) {
                         },
                     ])
                 );
+                // Integrate a patch if required
+                if (patchName) {
+                    finalOutput = await patch.apply(finalOutput, patchName);
+                    if (finalOutput === null) {
+                        console.error('Error patching the simple dictionary JSON file.');
+                        return resolve(false);
+                    }
+                }
                 // Convert the final output to a JSON string
                 const jsonString = JSON.stringify(finalOutput);
                 // Write the JSON file
@@ -125,16 +136,7 @@ function convert(fileName) {
     });
 }
 
-/**
- * Checks if the script was executed directly via npm run.
- * @return {boolean}
- */
-function isRunningViaNpmRun() {
-    return require.main === module &&
-        process.env.npm_lifecycle_event !== undefined &&
-        process.env.npm_package_json !== undefined;
-}
-
-if (isRunningViaNpmRun() === true) main();
+// Only run main() if the module is called directly via npm run.
+if (module.parent === null) main();
 
 module.exports = { convert };

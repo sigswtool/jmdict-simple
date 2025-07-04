@@ -270,16 +270,7 @@ function unpackAsset(tarGzFilePath, destinationDir) {
     });
 }
 
-/**
- * Checks if the script was executed directly via npm run.
- * @return {boolean}
- */
-function isRunningViaNpmRun() {
-    return require.main === module &&
-        process.env.npm_lifecycle_event !== undefined &&
-        process.env.npm_package_json !== undefined;
-}
-
-if (isRunningViaNpmRun() === true) main();
+// Only run main() if the module is called directly via npm run.
+if (module.parent === null) main();
 
 module.exports = { update };
